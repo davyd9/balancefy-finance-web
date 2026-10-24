@@ -1,0 +1,20 @@
+import nextJest from "next/jest.js";
+import { config as dotenvConfig } from "dotenv";
+import { join } from "path";
+
+dotenvConfig({ path: join(process.cwd(), ".env.test") }); // carrega o ambiente de teste
+
+const createJestConfig = nextJest({ dir: "./" });
+
+/** @type {import('jest').Config} */
+const customJestConfig = {
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  testEnvironment: "jest-environment-jsdom",
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@t3-oss/env-nextjs$": "<rootDir>/jest/__mocks__/env-package.ts",
+  },
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+};
+
+export default createJestConfig(customJestConfig);
